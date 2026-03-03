@@ -1,0 +1,56 @@
+# paths
+input_rds: null              # you can set it to a .rds Seurat object path OR leave null to choose interactively
+out_dir: "results"
+fig_dir: "figures"
+
+#  assays / metadata 
+default_assay: "SCT"         # "SCT" or "RNA"
+ident_col: "Cell_Line"       # metadata column to compare (Cell_Line, orig.ident)
+group_a: "GroupA"            # ident.1
+group_b: "GroupB"            # ident.2
+
+# optional filtering (I would suggest this if cell cycle phase or age of your cells introduces a variable in your data)
+subset_rules:
+  enable: true
+  # You can add multiple metadata filters here.
+  # Each rule: {col: "Experimental_Group", regex: "D45$"} or {col: "Phase", equals: "G1"}
+  rules:
+    - { col: "Experimental_Group", regex: "D45$" }
+    - { col: "Phase", equals: "G1" }
+
+gene_filter:
+  enable: false
+  gene: "TNNT2"
+  min_expr: 0
+
+# differential expression  
+de:
+  test_use: "wilcox"
+  min_pct: 0.1
+  logfc_threshold: 0.0
+  only_pos: false
+
+#  ranking fallback for GO if few sig genes  
+rank:
+  top_n: 1000
+  min_p: 0.05        # for "sig gene" list; if none pass, fallback to top_n ranked
+  score: "abs_logFC_times_mlog10p"  # future-proof knob
+
+# GO enrichment 
+go:
+  ont: "BP"
+  p_adjust_method: "BH"
+  pvalue_cutoff: 0.05
+  qvalue_cutoff: 0.2
+  readable: true
+  # optional subtree filter (leave null to skip)
+  subtree_root: "GO:0009987"   # cellular process (or whatever is best for your data)
+  top_terms: 10
+
+# plotting  
+plots:
+  barplot_max_terms: 30
+  chord_top_terms: 5
+  chord_max_genes_per_term: 12
+  chord_min_abs_logfc: 0.25
+  chord_label_top_genes_total: 40
